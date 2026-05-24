@@ -1,3 +1,20 @@
+<?php
+/**
+ * PhysioGlides - About Us
+ */
+if (session_status() === PHP_SESSION_NONE) {
+    session_start([
+        'cookie_lifetime' => 0,
+        'cookie_secure'    => true,
+        'cookie_httponly'  => true,
+        'cookie_samesite'  => 'Strict'
+    ]);
+}
+
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -8,7 +25,28 @@
       content="Learn about PhysioGlides Physiotherapy Clinic in Medavakkam, Chennai, and its patient-first approach to evidence-based recovery."
     />
     <title>About Us | PhysioGlides</title>
-    <link rel="stylesheet" href="styles.css" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://physioglides.com/about.php" />
+
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="About Us | PhysioGlides" />
+    <meta property="og:description" content="Learn about Dr. Mangala Prema and our evidence-based care approach in Medavakkam." />
+    <meta property="og:image" content="https://physioglides.com/assets/about-clinic.png" />
+    <meta property="og:url" content="https://physioglides.com/about.php" />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="About Us | PhysioGlides" />
+    <meta name="twitter:description" content="Learn about Dr. Mangala Prema and our evidence-based care approach." />
+    <meta name="twitter:image" content="https://physioglides.com/assets/about-clinic.png" />
+
+    <!-- CSRF Token Meta -->
+    <meta name="csrf-token" content="<?php echo htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8'); ?>">
+
+    <!-- Cache-Busted Stylesheet -->
+    <link rel="stylesheet" href="styles.css?v=1.0.1" />
   </head>
   <body>
     <svg class="svg-sprite" aria-hidden="true">
@@ -25,16 +63,16 @@
 
     <header class="site-header" data-header>
       <div class="container header-inner">
-        <a class="brand" href="index.html#home" aria-label="PhysioGlides home">
+        <a class="brand" href="index.php#home" aria-label="PhysioGlides home">
           <span class="brand-mark"><svg><use href="#icon-activity"></use></svg></span>
           <span class="brand-name">Physio<span>Glides</span></span>
         </a>
         <nav class="desktop-nav" aria-label="Primary navigation">
-          <a href="index.html#home">Home</a>
-          <a class="is-active" href="about.html">About</a>
-          <a href="services.html">Services</a>
-          <a href="index.html#contact">Contact</a>
-          <a class="btn btn-primary btn-small" href="index.html#booking">Book Appointment</a>
+          <a href="index.php#home">Home</a>
+          <a class="is-active" href="about.php">About</a>
+          <a href="services.php">Services</a>
+          <a href="index.php#contact">Contact</a>
+          <a class="btn btn-primary btn-small" href="index.php#booking">Book Appointment</a>
         </nav>
         <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" data-menu-toggle>
           <svg class="menu-icon"><use href="#icon-menu"></use></svg>
@@ -42,17 +80,20 @@
         </button>
       </div>
       <nav class="mobile-nav" aria-label="Mobile navigation" data-mobile-nav>
-        <a href="index.html#home">Home</a>
-        <a class="is-active" href="about.html">About</a>
-        <a href="services.html">Services</a>
-        <a href="index.html#contact">Contact</a>
-        <a class="btn btn-primary" href="index.html#booking">Book Appointment</a>
+        <a href="index.php#home">Home</a>
+        <a class="is-active" href="about.php">About</a>
+        <a href="services.php">Services</a>
+        <a href="index.php#contact">Contact</a>
+        <a class="btn btn-primary" href="index.php#booking">Book Appointment</a>
       </nav>
     </header>
 
     <main>
       <section class="page-hero mission-hero">
-        <img class="hero-bg-anim" src="assets/mission-bg.png" alt="" />
+        <picture>
+          <source srcset="assets/mission-bg.webp" type="image/webp">
+          <img class="hero-bg-anim" src="assets/mission-bg.png" alt="Healing background environment" />
+        </picture>
         <div class="container page-hero-content">
           <p class="section-kicker fade-in-up delay-1">About PhysioGlides</p>
           <h1 class="fade-in-up delay-2">Our Mission: Restoring Your Life's Rhythm</h1>
@@ -60,7 +101,7 @@
             We combine evidence-based clinical care with personalized recovery plans to help you move freely, live
             fully, and perform at your absolute best.
           </p>
-          <a class="btn btn-primary btn-large fade-in-up delay-4" href="index.html#booking">
+          <a class="btn btn-primary btn-large fade-in-up delay-4" href="index.php#booking">
             Start Your Recovery <svg><use href="#icon-arrow-right"></use></svg>
           </a>
         </div>
@@ -91,7 +132,10 @@
           </div>
           <div class="image-stack reveal-on-scroll">
             <span></span>
-            <img src="assets/about-clinic.png" alt="PhysioGlides clinic interior and treatment space" />
+            <picture>
+              <source srcset="assets/about-clinic.webp" type="image/webp">
+              <img src="assets/about-clinic.png" alt="PhysioGlides clinic interior and treatment space" width="600" height="420" />
+            </picture>
           </div>
         </div>
       </section>
@@ -158,7 +202,7 @@
         <div class="container">
           <h2>Join the Path to Recovery</h2>
           <p>Schedule your comprehensive assessment today and take the first step toward optimal movement.</p>
-          <a class="btn btn-primary btn-large" href="index.html#booking">Book Appointment</a>
+          <a class="btn btn-primary btn-large" href="index.php#booking">Book Appointment</a>
         </div>
       </section>
     </main>
@@ -166,7 +210,7 @@
     <footer class="footer">
       <div class="container footer-grid">
         <div>
-          <a class="brand footer-brand" href="index.html#home" aria-label="PhysioGlides home">
+          <a class="brand footer-brand" href="index.php#home" aria-label="PhysioGlides home">
             <span class="brand-mark"><svg><use href="#icon-activity"></use></svg></span>
             <span class="brand-name">Physio<span>Glides</span></span>
           </a>
@@ -174,10 +218,10 @@
         </div>
         <div>
           <h3>Quick Links</h3>
-          <a href="index.html#home">Home</a>
-          <a href="about.html">About Us</a>
-          <a href="services.html">Our Services</a>
-          <a href="index.html#booking">Book Appointment</a>
+          <a href="index.php#home">Home</a>
+          <a href="about.php">About Us</a>
+          <a href="services.php">Our Services</a>
+          <a href="index.php#booking">Book Appointment</a>
         </div>
         <div>
           <h3>Contact Us</h3>
@@ -188,18 +232,19 @@
         <div>
           <h3>Ready to heal?</h3>
           <p>Schedule your assessment today.</p>
-          <a class="btn btn-primary btn-small" href="index.html#booking">Book Appointment Today</a>
+          <a class="btn btn-primary btn-small" href="index.php#booking">Book Appointment Today</a>
         </div>
       </div>
       <div class="container footer-bottom">
-        <span>Copyright <span data-year></span> PhysioGlides Physiotherapy Clinic. All rights reserved.</span>
+        <span>Copyright &copy; <span data-year></span> PhysioGlides Physiotherapy Clinic. All rights reserved.</span>
       </div>
     </footer>
 
-    <a class="whatsapp" href="index.html#contact" aria-label="Chat on WhatsApp">
+    <a class="whatsapp" href="https://wa.me/919876543210" target="_blank" rel="noreferrer" aria-label="Chat on WhatsApp">
       <svg><use href="#icon-phone"></use></svg>
     </a>
 
-    <script src="script.js"></script>
+    <!-- Cache-Busted Javascript -->
+    <script src="script.js?v=1.0.1"></script>
   </body>
 </html>

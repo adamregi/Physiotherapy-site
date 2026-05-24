@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+
+# Block access to system folders and configuration files
+Disallow: /config.php
+Disallow: /config.example.php
+Disallow: /booking.php
+Disallow: /cleanup.php
+Disallow: /convert_images.php
+Disallow: /logs/
+Disallow: /phpmailer/
+
+Sitemap: https://physioglides.com/sitemap.xml

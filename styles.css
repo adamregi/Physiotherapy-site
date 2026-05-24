@@ -38,6 +38,7 @@ body.menu-open {
 img {
   display: block;
   max-width: 100%;
+  height: auto;
 }
 
 a {
@@ -76,13 +77,14 @@ svg:not(.svg-sprite) {
   overflow: hidden;
 }
 
+/* Default Mobile-First Spacing */
 .container {
-  width: min(100% - 32px, 1180px);
+  width: min(100% - 16px, 1180px);
   margin: 0 auto;
 }
 
 .section {
-  padding: 72px 0;
+  padding: 58px 0;
   scroll-margin-top: 92px;
 }
 
@@ -107,7 +109,7 @@ svg:not(.svg-sprite) {
 .location h2 {
   margin: 0;
   color: var(--ink);
-  font-size: 2rem;
+  font-size: 2.25rem;
   line-height: 1.2;
 }
 
@@ -173,6 +175,7 @@ svg:not(.svg-sprite) {
   font-size: 1.05rem;
 }
 
+/* Header & Navigation */
 .site-header {
   position: fixed;
   inset: 0 0 auto;
@@ -205,8 +208,8 @@ svg:not(.svg-sprite) {
 
 .brand-mark {
   display: inline-grid;
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   place-items: center;
   color: var(--white);
   background: var(--teal);
@@ -219,7 +222,7 @@ svg:not(.svg-sprite) {
 }
 
 .brand-name {
-  font-size: 1.45rem;
+  font-size: 1.1rem;
   font-weight: 800;
   line-height: 1;
 }
@@ -298,13 +301,14 @@ svg:not(.svg-sprite) {
   margin-top: 6px;
 }
 
+/* Hero Section */
 .hero {
   position: relative;
   display: flex;
-  min-height: 88vh;
-  align-items: center;
+  min-height: 760px;
+  align-items: flex-start;
   overflow: hidden;
-  padding: 120px 0 76px;
+  padding: 118px 0 76px;
   isolation: isolate;
 }
 
@@ -319,16 +323,16 @@ svg:not(.svg-sprite) {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 58% center;
+  object-position: 64% center;
 }
 
 .hero-overlay {
   z-index: -1;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.97) 0%, rgba(255, 255, 255, 0.82) 54%, rgba(255, 255, 255, 0.25) 100%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.9) 56%, rgba(255, 255, 255, 0.5) 100%);
 }
 
 .hero-content {
-  width: min(100% - 32px, 1180px);
+  width: min(100% - 16px, 1180px);
 }
 
 .hero-content .eyebrow {
@@ -346,7 +350,7 @@ svg:not(.svg-sprite) {
   max-width: 720px;
   margin: 22px 0 24px;
   color: var(--ink);
-  font-size: 3rem;
+  font-size: 2.25rem;
   line-height: 1.13;
 }
 
@@ -358,16 +362,17 @@ svg:not(.svg-sprite) {
   max-width: 620px;
   margin: 0 0 34px;
   color: #4a5565;
-  font-size: 1.18rem;
+  font-size: 1.05rem;
 }
 
+/* Page Hero */
 .page-hero {
   position: relative;
   display: grid;
-  min-height: 620px;
+  min-height: 560px;
   place-items: center;
   overflow: hidden;
-  padding: 130px 0 80px;
+  padding: 118px 0 80px;
   text-align: center;
   isolation: isolate;
 }
@@ -398,7 +403,7 @@ svg:not(.svg-sprite) {
 .page-title h1 {
   margin: 0;
   color: #1b1c1c;
-  font-size: 2.65rem;
+  font-size: 2.35rem;
   line-height: 1.18;
 }
 
@@ -410,7 +415,7 @@ svg:not(.svg-sprite) {
 }
 
 .page-title {
-  padding: 132px 0 64px;
+  padding: 112px 0 64px;
   background: #fff4ea;
   text-align: center;
 }
@@ -430,6 +435,7 @@ svg:not(.svg-sprite) {
   color: var(--teal);
 }
 
+/* Statistics Grid */
 .stats {
   position: relative;
   z-index: 1;
@@ -440,7 +446,7 @@ svg:not(.svg-sprite) {
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr;
   gap: 26px;
   text-align: center;
 }
@@ -453,7 +459,7 @@ svg:not(.svg-sprite) {
 
 .stats-grid strong {
   color: var(--teal);
-  font-size: 2.35rem;
+  font-size: 2rem;
   line-height: 1;
 }
 
@@ -462,6 +468,7 @@ svg:not(.svg-sprite) {
   font-weight: 650;
 }
 
+/* Layout Splits & Grids */
 .split {
   display: grid;
   grid-template-columns: 1fr;
@@ -484,7 +491,7 @@ svg:not(.svg-sprite) {
   position: relative;
   z-index: 1;
   width: 100%;
-  height: 420px;
+  height: 340px;
   object-fit: cover;
   border-radius: 8px;
   box-shadow: var(--shadow);
@@ -629,6 +636,7 @@ svg:not(.svg-sprite) {
   color: var(--muted);
 }
 
+/* Call to Action Banner */
 .dark-cta {
   padding: 82px 0;
   color: var(--white);
@@ -649,10 +657,7 @@ svg:not(.svg-sprite) {
   font-size: 1.08rem;
 }
 
-.services-page {
-  background: var(--white);
-}
-
+/* Services Directory Page toolbar */
 .service-toolbar {
   display: flex;
   justify-content: flex-start;
@@ -765,6 +770,7 @@ svg:not(.svg-sprite) {
   font-size: 1.6rem;
 }
 
+/* Modality Badges */
 .therapy-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -793,9 +799,10 @@ svg:not(.svg-sprite) {
   box-shadow: 0 4px 20px rgba(4, 156, 164, 0.15);
 }
 
+/* Testimonial slider setup */
 .testimonial-card {
   position: relative;
-  padding: 30px;
+  padding: 20px;
 }
 
 .testimonial-card .quote {
@@ -834,13 +841,12 @@ svg:not(.svg-sprite) {
   font-size: 0.9rem;
 }
 
-/* Testimonial Slider / Carousel */
 .testimonial-slider-container {
   position: relative;
   width: 100%;
   max-width: 860px;
   margin: 0 auto;
-  padding: 0 64px;
+  padding: 0;
   box-sizing: border-box;
 }
 
@@ -863,49 +869,10 @@ svg:not(.svg-sprite) {
   box-sizing: border-box;
 }
 
-/* Slider Navigation Arrows */
 .slider-arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 10;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: var(--white);
-  border: 1px solid var(--line);
-  color: var(--teal);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+  display: none;
 }
 
-.slider-arrow:hover,
-.slider-arrow:focus-visible {
-  background: var(--teal);
-  border-color: var(--teal);
-  color: var(--white);
-  box-shadow: 0 6px 16px rgba(4, 156, 164, 0.25);
-  transform: translateY(-50%) scale(1.05);
-}
-
-.slider-arrow.prev {
-  left: 0;
-}
-
-.slider-arrow.next {
-  right: 0;
-}
-
-.slider-arrow svg {
-  width: 20px;
-  height: 20px;
-  stroke-width: 2.5;
-}
-
-/* Slider Dots Indicator */
 .slider-dots {
   display: flex;
   justify-content: center;
@@ -934,22 +901,12 @@ svg:not(.svg-sprite) {
   background-color: var(--teal);
 }
 
-/* Responsiveness for Slider */
-@media (max-width: 767px) {
-  .testimonial-slider-container {
-    padding: 0;
-  }
-  
-  .slider-arrow {
-    display: none;
-  }
-}
-
+/* Booking Form Elements */
 .booking-panel {
   display: grid;
   grid-template-columns: 1fr;
   gap: 38px;
-  padding: 28px;
+  padding: 20px;
   background: rgba(4, 156, 164, 0.06);
   border: 1px solid rgba(4, 156, 164, 0.12);
   border-radius: 8px;
@@ -957,6 +914,7 @@ svg:not(.svg-sprite) {
 
 .urgent-box {
   display: flex;
+  align-items: flex-start;
   gap: 16px;
   margin-top: 28px;
   padding: 22px;
@@ -994,7 +952,7 @@ svg:not(.svg-sprite) {
 .appointment-form {
   display: grid;
   gap: 18px;
-  padding: 24px;
+  padding: 20px;
   box-shadow: var(--shadow);
 }
 
@@ -1072,6 +1030,15 @@ svg:not(.svg-sprite) {
   font-weight: 800;
 }
 
+/* Validation Feedback CSS */
+.error-message {
+  color: #dc2626;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+/* Contact & Map layout */
 .location-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -1079,7 +1046,7 @@ svg:not(.svg-sprite) {
 }
 
 .contact-card {
-  padding: 26px;
+  padding: 20px;
   background: #f9fafb;
 }
 
@@ -1090,6 +1057,7 @@ svg:not(.svg-sprite) {
 
 .contact-row {
   display: flex;
+  align-items: flex-start;
   gap: 16px;
   margin-top: 22px;
 }
@@ -1125,6 +1093,7 @@ svg:not(.svg-sprite) {
   border: 0;
 }
 
+/* Footer layout */
 .footer {
   color: #d1d5db;
   background: var(--ink);
@@ -1176,8 +1145,8 @@ svg:not(.svg-sprite) {
 
 .whatsapp {
   position: fixed;
-  right: 20px;
-  bottom: 20px;
+  right: 16px;
+  bottom: 16px;
   z-index: 45;
   display: grid;
   width: 56px;
@@ -1201,6 +1170,7 @@ svg:not(.svg-sprite) {
   height: 26px;
 }
 
+/* Service Detail Dialogue */
 .service-dialog {
   width: min(92vw, 760px);
   padding: 0;
@@ -1287,8 +1257,7 @@ svg:not(.svg-sprite) {
   margin-top: 3px;
 }
 
-/* --- ANIMATIONS & DYNAMIC EFFECTS --- */
-
+/* Animations */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -1324,7 +1293,6 @@ svg:not(.svg-sprite) {
   transform-origin: center center;
 }
 
-/* Scroll Triggered Animations */
 .reveal-on-scroll {
   opacity: 0;
   transform: translateY(24px);
@@ -1338,7 +1306,6 @@ svg:not(.svg-sprite) {
   transform: translateY(0);
 }
 
-/* staggered reveal for lists/grids */
 .reveal-active:nth-child(2) { transition-delay: 0.12s; }
 .reveal-active:nth-child(3) { transition-delay: 0.24s; }
 .reveal-active:nth-child(4) { transition-delay: 0.36s; }
@@ -1347,26 +1314,34 @@ svg:not(.svg-sprite) {
 
 
 /* ==========================================================================
-   MEDIA QUERIES (MOBILE-FIRST FROM 368px TO 4K SCREENS)
+   MEDIA QUERIES (MOBILE-FIRST SCALING OVERRIDES)
    ========================================================================== */
 
-/* 1. Mobile Small Widths (default styles handle up to 367px) */
-
-/* 2. Small Mobile / Landscape Breakpoint (min 368px to 4k) */
+/* 2. Small Mobile / Landscape Breakpoint (min-width: 368px) */
 @media (min-width: 368px) {
   .container {
     width: min(100% - 24px, 1180px);
   }
+  .brand-mark {
+    width: 40px;
+    height: 40px;
+  }
+  .brand-name {
+    font-size: 1.25rem;
+  }
+  .hero h1 {
+    font-size: 2.55rem;
+  }
 }
 
-/* 3. Phablet / Large Mobile Breakpoint (min 420px to 4k) */
+/* 3. Phablet Breakpoint (min-width: 420px) */
 @media (min-width: 420px) {
   .container {
     width: min(100% - 32px, 1180px);
   }
 }
 
-/* 4. Small Tablet Breakpoint (min 576px to 4k) */
+/* 4. Small Tablet Breakpoint (min-width: 576px) */
 @media (min-width: 576px) {
   .check-list,
   .form-row,
@@ -1386,15 +1361,23 @@ svg:not(.svg-sprite) {
   }
 }
 
-/* 5. Tablet Breakpoint (min 640px to 4k) */
+/* 5. Medium Tablet Breakpoint (min-width: 640px) */
 @media (min-width: 640px) {
   .container {
     width: min(100% - 48px, 1180px);
   }
 }
 
-/* 6. Desktop Nav & Standard Screen (min 768px to 4k) */
+/* 6. Desktop Mode (min-width: 768px) */
 @media (min-width: 768px) {
+  .section {
+    padding: 72px 0;
+  }
+  
+  .brand-name {
+    font-size: 1.45rem;
+  }
+  
   .desktop-nav {
     display: flex;
   }
@@ -1404,8 +1387,40 @@ svg:not(.svg-sprite) {
     display: none;
   }
 
+  .hero {
+    min-height: 88vh;
+    align-items: center;
+    padding-top: 120px;
+  }
+
+  .hero img {
+    object-position: 58% center;
+  }
+
+  .hero-overlay {
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.97) 0%, rgba(255, 255, 255, 0.82) 54%, rgba(255, 255, 255, 0.25) 100%);
+  }
+
   .hero h1 {
     font-size: 3.75rem;
+  }
+
+  .hero-copy {
+    font-size: 1.18rem;
+  }
+
+  .page-hero {
+    min-height: 620px;
+    padding-top: 130px;
+  }
+
+  .page-hero h1,
+  .page-title h1 {
+    font-size: 2.65rem;
+  }
+
+  .page-title {
+    padding-top: 132px;
   }
 
   .stats-grid {
@@ -1416,18 +1431,51 @@ svg:not(.svg-sprite) {
     border-left: 1px solid rgba(209, 213, 219, 0.28);
   }
 
+  .stats-grid strong {
+    font-size: 2.35rem;
+  }
+
+  .image-stack img {
+    height: 420px;
+  }
+
   .section-heading h2,
   .section-copy h2,
   .location h2 {
     font-size: 2.35rem;
   }
 
+  .testimonial-slider-container {
+    padding: 0 64px;
+  }
+
+  .slider-arrow {
+    display: inline-flex;
+  }
+
+  .booking-panel {
+    padding: 28px;
+  }
+
+  .appointment-form {
+    padding: 24px;
+  }
+
+  .contact-card {
+    padding: 26px;
+  }
+
   .footer-grid {
     grid-template-columns: 1.35fr 0.85fr 1fr 1fr;
   }
+
+  .whatsapp {
+    right: 20px;
+    bottom: 20px;
+  }
 }
 
-/* 7. Large Desktop Breakpoint (min 960px to 4k) */
+/* 7. Large Desktop Breakpoint (min-width: 960px) */
 @media (min-width: 960px) {
   .split,
   .booking-panel,
@@ -1455,7 +1503,7 @@ svg:not(.svg-sprite) {
   }
 }
 
-/* 8. Widescreen Desktop Breakpoint (min 1200px to 4k) */
+/* 8. Widescreen Desktop Breakpoint (min-width: 1200px) */
 @media (min-width: 1200px) {
   .container {
     width: min(100% - 64px, 1280px);
@@ -1465,138 +1513,113 @@ svg:not(.svg-sprite) {
   }
 }
 
-/* 9. QHD / 2K Screens Breakpoint (min 2560px to 4k) */
+/* 9. QHD / 2K Screens Breakpoint (min-width: 2560px) { ... handled ... } */
 @media (min-width: 2560px) {
   :root {
     --shadow: 0 16px 45px rgba(0, 0, 0, 0.09);
   }
-
   .container {
     width: min(100% - 120px, 1800px);
   }
-
   body {
     font-size: 1.18rem;
     line-height: 1.65;
   }
-
   .section {
     padding: 96px 0;
   }
-
   .hero {
     min-height: 75vh;
   }
-
   .hero h1 {
     font-size: 5rem;
     max-width: 960px;
   }
-
   .hero-copy {
     font-size: 1.4rem;
     max-width: 780px;
   }
-
   .page-hero {
     min-height: 700px;
     padding-top: 160px;
   }
-
   .page-hero h1,
   .page-title h1 {
     font-size: 3.8rem;
   }
-
   .page-hero p:not(.section-kicker) {
     font-size: 1.38rem;
     max-width: 920px;
   }
-
   .section-heading h2,
   .section-copy h2,
   .location h2 {
     font-size: 3.2rem;
   }
-
   .image-stack img {
     height: 520px;
   }
 }
 
-/* 10. UHD / 4K Screens Breakpoint (min 3840px to 4k) */
+/* 10. UHD / 4K Screens Breakpoint (min-width: 3840px) */
 @media (min-width: 3840px) {
   .container {
     width: min(100% - 240px, 2400px);
   }
-
   body {
     font-size: 1.45rem;
     line-height: 1.75;
   }
-
   .section {
     padding: 130px 0;
   }
-
   .hero {
     min-height: 60vh;
     padding-top: 200px;
   }
-
   .hero h1 {
     font-size: 6.8rem;
     max-width: 1300px;
     margin-bottom: 32px;
   }
-
   .hero-copy {
     font-size: 1.9rem;
     max-width: 1000px;
     margin-bottom: 48px;
   }
-
   .page-hero {
     min-height: 800px;
     padding-top: 220px;
   }
-
   .page-hero h1,
   .page-title h1 {
     font-size: 5rem;
   }
-
   .page-hero p:not(.section-kicker) {
     font-size: 1.85rem;
     max-width: 1200px;
   }
-
   .section-heading h2,
   .section-copy h2,
   .location h2 {
     font-size: 4.5rem;
   }
-
   .btn-large {
     min-height: 72px;
     padding: 20px 40px;
     font-size: 1.35rem;
   }
-
   .image-stack img {
     height: 640px;
   }
-
   .feature-card {
     padding: 40px;
   }
-
   .feature-card span {
     width: 72px;
     height: 72px;
     border-radius: 12px;
   }
-
   .feature-card span svg {
     width: 36px;
     height: 36px;
@@ -1604,97 +1627,29 @@ svg:not(.svg-sprite) {
 }
 
 /* ==========================================================================
-   LEGACY OVERRIDES (PRESERVING BASE MOBILE LAYOUT FOR MAX-WIDTH)
+   ACCESSIBILITY KEYBOARD NAVIGATION FOCUS & REDUCED MOTION SUPPORT
    ========================================================================== */
-@media (max-width: 767px) {
-  .brand-name {
-    font-size: 1.25rem;
-  }
 
-  .hero {
-    min-height: 760px;
-    align-items: flex-start;
-    padding-top: 118px;
-  }
-
-  .hero img {
-    object-position: 64% center;
-  }
-
-  .hero-overlay {
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.9) 56%, rgba(255, 255, 255, 0.5) 100%);
-  }
-
-  .hero h1 {
-    font-size: 2.55rem;
-  }
-
-  .page-hero {
-    min-height: 560px;
-    padding-top: 118px;
-  }
-
-  .page-hero h1,
-  .page-title h1 {
-    font-size: 2.35rem;
-  }
-
-  .page-title {
-    padding-top: 112px;
-  }
-
-  .hero-copy {
-    font-size: 1.05rem;
-  }
-
-  .section {
-    padding: 58px 0;
-  }
-
-  .stats-grid strong {
-    font-size: 2rem;
-  }
-
-  .image-stack img {
-    height: 340px;
-  }
-
-  .booking-panel,
-  .appointment-form,
-  .contact-card {
-    padding: 20px;
-  }
-
-  .whatsapp {
-    right: 16px;
-    bottom: 16px;
-  }
+/* Visible Focus Outline Rings */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--orange);
+  outline-offset: 2px;
 }
 
-@media (max-width: 367px) {
-  .container {
-    width: min(100% - 16px, 1180px);
+/* Prefers Reduced Motion Settings */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-delay: 0s !important;
+    animation-duration: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0s !important;
+    scroll-behavior: auto !important;
   }
-
-  .brand-mark {
-    width: 36px;
-    height: 36px;
-  }
-
-  .brand-name {
-    font-size: 1.1rem;
-  }
-
-  .hero h1 {
-    font-size: 2.25rem;
-  }
-
-  .stats-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .urgent-box,
-  .contact-row {
-    align-items: flex-start;
+  .hero-bg-anim {
+    animation: none !important;
   }
 }

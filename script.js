@@ -252,11 +252,15 @@ function renderServices() {
   });
   const visibleServices = servicesExpanded ? filteredServices : filteredServices.slice(0, initialCount);
 
+  // Modern WebP picture fallback implementation inside JS services cards
   servicesGrid.innerHTML = visibleServices
     .map(
       (service) => `
         <article class="service-card reveal-on-scroll">
-          <img src="${service.image}" alt="${service.title}" loading="lazy" />
+          <picture>
+            <source srcset="${service.image.replace('.png', '.webp')}" type="image/webp">
+            <img src="${service.image}" alt="${service.title}" loading="lazy" width="370" height="245" />
+          </picture>
           <div class="service-card-content">
             <h3>${service.title}</h3>
             <p>${service.shortDesc}</p>
@@ -278,7 +282,6 @@ function renderServices() {
     noServicesMessage.hidden = filteredServices.length > 0;
   }
 
-  // Bind/observe newly rendered scroll-reveal elements
   initScrollReveal();
 }
 
@@ -286,10 +289,13 @@ function openServiceDialog(serviceId) {
   const service = services.find((item) => item.id === serviceId);
   if (!service || !dialog || !dialogContent) return;
 
-  const bookingHref = document.getElementById("booking") ? "#booking" : "index.html#booking";
+  const bookingHref = document.getElementById("booking") ? "#booking" : "index.php#booking";
 
   dialogContent.innerHTML = `
-    <img class="dialog-media" src="${service.image}" alt="${service.title}" />
+    <picture>
+      <source srcset="${service.image.replace('.png', '.webp')}" type="image/webp">
+      <img class="dialog-media" src="${service.image}" alt="${service.title}" width="760" height="260" />
+    </picture>
     <div class="dialog-body">
       <h2>${service.title}</h2>
       <p>${service.fullDesc}</p>
@@ -332,7 +338,6 @@ function closeMobileMenu() {
 
 function setHeaderState() {
   if (!header) return;
-
   header.classList.toggle("is-scrolled", window.scrollY > 12);
 }
 
@@ -405,96 +410,219 @@ if (dialog) {
   });
 }
 
+// ----------------------------------------------------------------------
+// HARDENED CLIENT-SIDE FORM VALIDATION & INTERACTIVE STATE
+// ----------------------------------------------------------------------
 if (appointmentForm) {
-  appointmentForm.querySelector('input[name="date"]').min = new Date().toISOString().split("T")[0];
+  const dateField = appointmentForm.querySelector('input[name="date"]');
+  if (dateField) {
+    dateField.min = new Date().toISOString().split("T")[0];
+  }
+
+  // Monitor typing and clear validation errors dynamically
+  const formInputs = appointmentForm.querySelectorAll("input, select, textarea");
+  formInputs.forEach((input) => {
+    input.addEventListener("input", () => {
+      clearFieldError(input);
+    });
+    input.addEventListener("change", () => {
+      clearFieldError(input);
+    });
+  });
 
   appointmentForm.addEventListener("submit", (event) => {
     event.preventDefault();
-    formStatus.textContent = "";
+    formStatus.innerHTML = "";
+    
+    // Clear all existing inline errors
+    formInputs.forEach((input) => clearFieldError(input));
 
-    const fields = [...appointmentForm.querySelectorAll("input, select, textarea")];
-    fields.forEach((field) => field.classList.remove("is-invalid"));
+    let firstInvalidField = null;
 
-    const invalidField = fields.find((field) => !field.checkValidity());
-    if (invalidField) {
-      invalidField.classList.add("is-invalid");
-      invalidField.focus();
-      formStatus.textContent = "Please complete all required fields correctly.";
+    // Validate Full Name (Human-Realistic supporting accents, hyphens, dots, spaces)
+    const nameInput = appointmentForm.querySelector('[name="name"]');
+    const nameVal = nameInput.value.trim();
+    const nameRegex = /^[\p{L}\s'.-]{3,100}$/u;
+    if (nameVal.length === 0) {
+      setFieldError(nameInput, "Full name is required.");
+      if (!firstInvalidField) firstInvalidField = nameInput;
+    } else if (!nameRegex.test(nameVal)) {
+      setFieldError(nameInput, "Please enter a valid full name (3-100 letters only).");
+      if (!firstInvalidField) firstInvalidField = nameInput;
+    }
+
+    // Validate Phone Number
+    const phoneInput = appointmentForm.querySelector('[name="phone"]');
+    const phoneVal = phoneInput.value.trim();
+    const phoneRegex = /^[0-9+()\s-]{10,15}$/;
+    if (phoneVal.length === 0) {
+      setFieldError(phoneInput, "Phone number is required.");
+      if (!firstInvalidField) firstInvalidField = phoneInput;
+    } else if (!phoneRegex.test(phoneVal)) {
+      setFieldError(phoneInput, "Please enter a valid phone number (10 to 15 digits).");
+      if (!firstInvalidField) firstInvalidField = phoneInput;
+    }
+
+    // Validate Email
+    const emailInput = appointmentForm.querySelector('[name="email"]');
+    const emailVal = emailInput.value.trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (emailVal.length === 0) {
+      setFieldError(emailInput, "Email address is required.");
+      if (!firstInvalidField) firstInvalidField = emailInput;
+    } else if (!emailRegex.test(emailVal)) {
+      setFieldError(emailInput, "Please enter a valid email address.");
+      if (!firstInvalidField) firstInvalidField = emailInput;
+    }
+
+    // Validate Service
+    const serviceInput = appointmentForm.querySelector('[name="service"]');
+    if (serviceInput.value === "") {
+      setFieldError(serviceInput, "Please select a clinical service.");
+      if (!firstInvalidField) firstInvalidField = serviceInput;
+    }
+
+    // Validate Preferred Date (cannot be in the past)
+    const dateVal = dateField.value;
+    const todayStr = new Date().toISOString().split("T")[0];
+    if (dateVal === "") {
+      setFieldError(dateField, "Please select an appointment date.");
+      if (!firstInvalidField) firstInvalidField = dateField;
+    } else if (dateVal < todayStr) {
+      setFieldError(dateField, "Preferred date cannot be in the past.");
+      if (!firstInvalidField) firstInvalidField = dateField;
+    }
+
+    // Validate Preferred Time
+    const timeInput = appointmentForm.querySelector('[name="time"]');
+    if (timeInput.value === "") {
+      setFieldError(timeInput, "Please select a preferred time.");
+      if (!firstInvalidField) firstInvalidField = timeInput;
+    }
+
+    // Validate Age (integer between 1 and 120)
+    const ageInput = appointmentForm.querySelector('[name="age"]');
+    const ageVal = parseInt(ageInput.value.trim(), 10);
+    if (isNaN(ageVal) || ageVal < 1 || ageVal > 120) {
+      setFieldError(ageInput, "Please enter a valid age between 1 and 120.");
+      if (!firstInvalidField) firstInvalidField = ageInput;
+    }
+
+    // If validations failed, shift keyboard focus to the first faulty field
+    if (firstInvalidField) {
+      firstInvalidField.focus();
+      formStatus.textContent = "Please correct the highlighted errors above.";
+      formStatus.style.color = "#dc2626";
       return;
     }
 
-    const phoneField = appointmentForm.querySelector('input[name="phone"]');
-    const phonePattern = /^[0-9+()\s-]{10,15}$/;
-    if (!phonePattern.test(phoneField.value.trim())) {
-      phoneField.classList.add("is-invalid");
-      phoneField.focus();
-      formStatus.textContent = "Please enter a valid phone number.";
-      return;
-    }
-
-    // Show sending feedback
-    formStatus.textContent = "Sending booking request...";
+    // Show loading visual feedback and disable duplicate submissions
+    formStatus.textContent = "Submitting booking request...";
     formStatus.style.color = "var(--teal-dark)";
-
+    
     const submitBtn = appointmentForm.querySelector(".btn-submit");
-    if (submitBtn) submitBtn.disabled = true;
+    const originalBtnText = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Submitting...";
 
-    // Gather form payload
-    const formData = {
-      name: appointmentForm.querySelector('[name="name"]').value.trim(),
-      phone: appointmentForm.querySelector('[name="phone"]').value.trim(),
-      email: appointmentForm.querySelector('[name="email"]').value.trim(),
-      service: appointmentForm.querySelector('[name="service"]').value.trim(),
-      date: appointmentForm.querySelector('[name="date"]').value,
-      time: appointmentForm.querySelector('[name="time"]').value,
-      age: appointmentForm.querySelector('[name="age"]').value,
-      notes: appointmentForm.querySelector('[name="notes"]').value.trim()
-    };
+    // Extract CSRF Token from meta tag
+    const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
+    const csrfToken = csrfTokenMeta ? csrfTokenMeta.getAttribute("content") : "";
+
+    // Build form payload
+    const formData = new FormData(appointmentForm);
+    const payload = {};
+    formData.forEach((value, key) => {
+      payload[key] = value.trim();
+    });
 
     fetch("booking.php", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "X-CSRF-Token": csrfToken
       },
-      body: JSON.stringify(formData)
+      body: JSON.stringify(payload)
     })
       .then((res) => {
         if (!res.ok) {
-          throw new Error("Server error");
+          throw new Error("HTTP connection error " + res.status);
         }
         return res.json();
       })
       .then((data) => {
         if (data.success) {
           appointmentForm.reset();
+          // Reload Turnstile widget state if configured and present
+          if (window.turnstile) {
+            window.turnstile.reset();
+          }
           formStatus.textContent = data.message;
           formStatus.style.color = "var(--teal-dark)";
         } else {
-          formStatus.textContent = data.message;
+          formStatus.innerHTML = data.message;
           formStatus.style.color = "#dc2626";
         }
       })
       .catch((error) => {
-        formStatus.textContent = "Unable to send request. Please check your internet connection or call us directly.";
+        // Safe fallback alert with active call and WhatsApp action triggers
+        formStatus.innerHTML = `
+          Unable to submit booking automatically. Please call us at 
+          <a href="tel:+919876543210" style="text-decoration:underline; font-weight:bold;">+91 98765 43210</a> 
+          or chat on 
+          <a href="https://wa.me/919876543210" target="_blank" rel="noreferrer" style="text-decoration:underline; font-weight:bold; color:#25d366;">WhatsApp</a> 
+          to book directly.
+        `;
         formStatus.style.color = "#dc2626";
       })
       .finally(() => {
-        if (submitBtn) submitBtn.disabled = false;
-        window.setTimeout(() => {
-          formStatus.textContent = "";
-        }, 7000);
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalBtnText;
       });
   });
 }
 
-// Intersection Observer for scroll animations
+function setFieldError(input, message) {
+  input.classList.add("is-invalid");
+  input.setAttribute("aria-invalid", "true");
+  
+  const parent = input.parentElement;
+  
+  // Create description error label
+  const errId = "err-" + input.name;
+  input.setAttribute("aria-describedby", errId);
+  
+  let errSpan = parent.querySelector(".error-message");
+  if (!errSpan) {
+    errSpan = document.createElement("span");
+    errSpan.className = "error-message";
+    errSpan.id = errId;
+    errSpan.setAttribute("role", "alert");
+    parent.appendChild(errSpan);
+  }
+  errSpan.textContent = message;
+}
+
+function clearFieldError(input) {
+  input.classList.remove("is-invalid");
+  input.removeAttribute("aria-invalid");
+  input.removeAttribute("aria-describedby");
+  
+  const parent = input.parentElement;
+  const errSpan = parent.querySelector(".error-message");
+  if (errSpan) {
+    errSpan.remove();
+  }
+}
+
+// Intersection Observer for scroll reveal animations
 function initScrollReveal() {
   const revealElements = document.querySelectorAll(".reveal-on-scroll");
   if (!revealElements.length) return;
 
   const observerOptions = {
     root: null,
-    threshold: 0.1, // trigger when 10% visible
+    threshold: 0.1,
     rootMargin: "0px 0px -40px 0px"
   };
 
@@ -512,7 +640,6 @@ function initScrollReveal() {
   });
 }
 
-// Run observer setup on script startup
 document.addEventListener("DOMContentLoaded", () => {
   initScrollReveal();
   initTestimonialSlider();
@@ -535,7 +662,7 @@ function initTestimonialSlider() {
   let autoplayTimer = null;
   const autoplayDelay = 6000;
   
-  // Create Dots
+  // Create Dots indicators
   if (dotsContainer) {
     dotsContainer.innerHTML = slides
       .map((_, index) => `<button type="button" class="slider-dot" aria-label="Go to slide ${index + 1}" data-slide-index="${index}"></button>`)
@@ -545,8 +672,6 @@ function initTestimonialSlider() {
   
   function updateSlider() {
     track.style.transform = `translateX(-${currentIndex * 100}%)`;
-    
-    // Update dots state
     dots.forEach((dot, index) => {
       dot.classList.toggle("is-active", index === currentIndex);
     });
@@ -563,7 +688,6 @@ function initTestimonialSlider() {
     updateSlider();
   }
   
-  // Make goToSlide globally or locally accessible if needed, but keeping it scoped is cleanest.
   function nextSlide() {
     goToSlide(currentIndex + 1);
   }
@@ -572,7 +696,6 @@ function initTestimonialSlider() {
     goToSlide(currentIndex - 1);
   }
   
-  // Event listeners
   if (nextBtn) {
     nextBtn.addEventListener("click", () => {
       nextSlide();
@@ -597,7 +720,6 @@ function initTestimonialSlider() {
     });
   }
   
-  // Autoplay
   function startAutoplay() {
     if (autoplayTimer) return;
     autoplayTimer = setInterval(nextSlide, autoplayDelay);
@@ -615,11 +737,10 @@ function initTestimonialSlider() {
     startAutoplay();
   }
   
-  // Pause on hover
   container.addEventListener("mouseenter", stopAutoplay);
   container.addEventListener("mouseleave", startAutoplay);
   
-  // Touch / Swipe Gestures
+  // Touch Swiping Support
   let startX = 0;
   let currentX = 0;
   let isDragging = false;
@@ -652,7 +773,6 @@ function initTestimonialSlider() {
     startAutoplay();
   });
   
-  // Initialize
   goToSlide(0);
   startAutoplay();
 }

@@ -1,3 +1,25 @@
+<?php
+/**
+ * PhysioGlides - Landing & Booking Page
+ */
+$configFile = __DIR__ . '/config.php';
+if (file_exists($configFile)) {
+    require_once $configFile;
+}
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start([
+        'cookie_lifetime' => 0,
+        'cookie_secure'    => true,
+        'cookie_httponly'  => true,
+        'cookie_samesite'  => 'Strict'
+    ]);
+}
+
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -8,99 +30,112 @@
       content="PhysioGlides is a premium physiotherapy clinic in Medavakkam, Chennai, offering evidence-based recovery plans, rehabilitation, and home physiotherapy."
     />
     <title>PhysioGlides Physiotherapy Clinic</title>
-    <link rel="stylesheet" href="styles.css" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://physioglides.com/index.php" />
+
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="PhysioGlides Physiotherapy Clinic" />
+    <meta property="og:description" content="Premium evidence-based physiotherapy in Medavakkam, Chennai. Book your assessment today." />
+    <meta property="og:image" content="https://physioglides.com/assets/about-clinic.png" />
+    <meta property="og:url" content="https://physioglides.com/index.php" />
+    <meta property="og:type" content="business.business" />
+
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="PhysioGlides Physiotherapy Clinic" />
+    <meta name="twitter:description" content="Evidence-based physical rehabilitation in Chennai." />
+    <meta name="twitter:image" content="https://physioglides.com/assets/about-clinic.png" />
+
+    <!-- CSRF Token Meta -->
+    <meta name="csrf-token" content="<?php echo htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8'); ?>">
+
+    <!-- Cache-Busted Stylesheet -->
+    <link rel="stylesheet" href="styles.css?v=1.0.1" />
+
+    <!-- Cloudflare Turnstile API (only loaded if keys are configured) -->
+    <?php if (defined('TURNSTILE_SITE_KEY') && !empty(TURNSTILE_SITE_KEY)): ?>
+      <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" defer></script>
+    <?php endif; ?>
+
+    <!-- JSON-LD LocalBusiness Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "PhysiotherapyClinic",
+      "name": "PhysioGlides Physiotherapy Clinic",
+      "image": "https://physioglides.com/assets/about-clinic.png",
+      "@id": "https://physioglides.com/#clinic",
+      "url": "https://physioglides.com/index.php",
+      "telephone": "+919876543210",
+      "priceRange": "$$",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "123 Recovery Street, Main Road",
+        "addressLocality": "Medavakkam",
+        "addressRegion": "Chennai",
+        "postalCode": "600100",
+        "addressCountry": "IN"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 12.935092,
+        "longitude": 80.180632
+      },
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+          "opens": "08:00",
+          "closes": "20:00"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": "Sunday",
+          "opens": "09:00",
+          "closes": "13:00"
+        }
+      ],
+      "sameAs": [
+        "https://maps.app.goo.gl/zJwZW7VdtLcvnzrq9"
+      ]
+    }
+    </script>
   </head>
   <body>
     <svg class="svg-sprite" aria-hidden="true">
-      <symbol id="icon-activity" viewBox="0 0 24 24">
-        <path d="M22 12h-4l-3 8-6-16-3 8H2" />
-      </symbol>
-      <symbol id="icon-arrow-right" viewBox="0 0 24 24">
-        <path d="M5 12h14" />
-        <path d="m13 6 6 6-6 6" />
-      </symbol>
-      <symbol id="icon-book" viewBox="0 0 24 24">
-        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-        <path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z" />
-      </symbol>
-      <symbol id="icon-calendar" viewBox="0 0 24 24">
-        <path d="M8 2v4" />
-        <path d="M16 2v4" />
-        <path d="M3 10h18" />
-        <rect x="3" y="4" width="18" height="18" rx="2" />
-      </symbol>
-      <symbol id="icon-check" viewBox="0 0 24 24">
-        <path d="m20 6-11 11-5-5" />
-      </symbol>
-      <symbol id="icon-clock" viewBox="0 0 24 24">
-        <circle cx="12" cy="12" r="10" />
-        <path d="M12 6v6l4 2" />
-      </symbol>
-      <symbol id="icon-close" viewBox="0 0 24 24">
-        <path d="M18 6 6 18" />
-        <path d="m6 6 12 12" />
-      </symbol>
-      <symbol id="icon-mail" viewBox="0 0 24 24">
-        <rect x="3" y="5" width="18" height="14" rx="2" />
-        <path d="m3 7 9 6 9-6" />
-      </symbol>
-      <symbol id="icon-map" viewBox="0 0 24 24">
-        <path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z" />
-        <circle cx="12" cy="10" r="3" />
-      </symbol>
-      <symbol id="icon-menu" viewBox="0 0 24 24">
-        <path d="M4 6h16" />
-        <path d="M4 12h16" />
-        <path d="M4 18h16" />
-      </symbol>
-      <symbol id="icon-monitor" viewBox="0 0 24 24">
-        <rect x="3" y="4" width="18" height="12" rx="2" />
-        <path d="M8 20h8" />
-        <path d="M12 16v4" />
-      </symbol>
-      <symbol id="icon-phone" viewBox="0 0 24 24">
-        <path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.8 19.8 0 0 1 3.09 5.18 2 2 0 0 1 5.06 3h3a2 2 0 0 1 2 1.72c.12.89.32 1.76.6 2.6a2 2 0 0 1-.45 2.11L9 10.64a16 16 0 0 0 4.36 4.36l1.21-1.21a2 2 0 0 1 2.11-.45c.84.28 1.71.48 2.6.6A2 2 0 0 1 22 16.92z" />
-      </symbol>
-      <symbol id="icon-quote" viewBox="0 0 24 24">
-        <path d="M3 21c3-2 4.5-4.5 4.5-7.5H3V4h8v8.5C11 16.6 8.7 19.5 4.8 21H3z" />
-        <path d="M13 21c3-2 4.5-4.5 4.5-7.5H13V4h8v8.5c0 4.1-2.3 7-6.2 8.5H13z" />
-      </symbol>
-      <symbol id="icon-shield" viewBox="0 0 24 24">
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-      </symbol>
-      <symbol id="icon-star" viewBox="0 0 24 24">
-        <path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8-6.2-3.3L5.8 21 7 14.2 2 9.3l6.9-1L12 2z" />
-      </symbol>
-      <symbol id="icon-target" viewBox="0 0 24 24">
-        <circle cx="12" cy="12" r="10" />
-        <circle cx="12" cy="12" r="6" />
-        <circle cx="12" cy="12" r="2" />
-      </symbol>
-      <symbol id="icon-users" viewBox="0 0 24 24">
-        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-        <circle cx="9" cy="7" r="4" />
-        <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-      </symbol>
-      <symbol id="icon-chevron-left" viewBox="0 0 24 24">
-        <path d="m15 18-6-6 6-6" />
-      </symbol>
-      <symbol id="icon-chevron-right" viewBox="0 0 24 24">
-        <path d="m9 18 6-6-6-6" />
-      </symbol>
+      <symbol id="icon-activity" viewBox="0 0 24 24"><path d="M22 12h-4l-3 8-6-16-3 8H2" /></symbol>
+      <symbol id="icon-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14" /><path d="m13 6 6 6-6 6" /></symbol>
+      <symbol id="icon-book" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" /><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z" /></symbol>
+      <symbol id="icon-calendar" viewBox="0 0 24 24"><path d="M8 2v4" /><path d="M16 2v4" /><path d="M3 10h18" /><rect x="3" y="4" width="18" height="18" rx="2" /></symbol>
+      <symbol id="icon-check" viewBox="0 0 24 24"><path d="m20 6-11 11-5-5" /></symbol>
+      <symbol id="icon-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><path d="M12 6v6l4 2" /></symbol>
+      <symbol id="icon-close" viewBox="0 0 24 24"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></symbol>
+      <symbol id="icon-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></symbol>
+      <symbol id="icon-map" viewBox="0 0 24 24"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z" /><circle cx="12" cy="10" r="3" /></symbol>
+      <symbol id="icon-menu" viewBox="0 0 24 24"><path d="M4 6h16" /><path d="M4 12h16" /><path d="M4 18h16" /></symbol>
+      <symbol id="icon-monitor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2" /><path d="M8 20h8" /><path d="M12 16v4" /></symbol>
+      <symbol id="icon-phone" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.8 19.8 0 0 1 3.09 5.18 2 2 0 0 1 5.06 3h3a2 2 0 0 1 2 1.72c.12.89.32 1.76.6 2.6a2 2 0 0 1-.45 2.11L9 10.64a16 16 0 0 0 4.36 4.36l1.21-1.21a2 2 0 0 1 2.11-.45c.84.28 1.71.48 2.6.6A2 2 0 0 1 22 16.92z" /></symbol>
+      <symbol id="icon-quote" viewBox="0 0 24 24"><path d="M3 21c3-2 4.5-4.5 4.5-7.5H3V4h8v8.5C11 16.6 8.7 19.5 4.8 21H3z" /><path d="M13 21c3-2 4.5-4.5 4.5-7.5H13V4h8v8.5c0 4.1-2.3 7-6.2 8.5H13z" /></symbol>
+      <symbol id="icon-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></symbol>
+      <symbol id="icon-star" viewBox="0 0 24 24"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8-6.2-3.3L5.8 21 7 14.2 2 9.3l6.9-1L12 2z" /></symbol>
+      <symbol id="icon-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="6" /><circle cx="12" cy="12" r="2" /></symbol>
+      <symbol id="icon-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></symbol>
+      <symbol id="icon-chevron-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6" /></symbol>
+      <symbol id="icon-chevron-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6" /></symbol>
     </svg>
 
     <header class="site-header" data-header>
       <div class="container header-inner">
-        <a class="brand" href="index.html#home" aria-label="PhysioGlides home">
+        <a class="brand" href="index.php#home" aria-label="PhysioGlides home">
           <span class="brand-mark"><svg><use href="#icon-activity"></use></svg></span>
           <span class="brand-name">Physio<span>Glides</span></span>
         </a>
 
         <nav class="desktop-nav" aria-label="Primary navigation">
-          <a href="index.html#home">Home</a>
-          <a href="about.html">About</a>
-          <a href="services.html">Services</a>
+          <a href="index.php#home">Home</a>
+          <a href="about.php">About</a>
+          <a href="services.php">Services</a>
           <a href="#contact">Contact</a>
           <a class="btn btn-primary btn-small" href="#booking">Book Appointment</a>
         </nav>
@@ -112,9 +147,9 @@
       </div>
 
       <nav class="mobile-nav" aria-label="Mobile navigation" data-mobile-nav>
-        <a href="index.html#home">Home</a>
-        <a href="about.html">About</a>
-        <a href="services.html">Services</a>
+        <a href="index.php#home">Home</a>
+        <a href="about.php">About</a>
+        <a href="services.php">Services</a>
         <a href="#contact">Contact</a>
         <a class="btn btn-primary" href="#booking">Book Appointment</a>
       </nav>
@@ -122,7 +157,10 @@
 
     <main>
       <section class="hero" id="home">
-        <img class="hero-bg-anim" src="assets/mission-bg.png" alt="PhysioGlides clinic treatment and healing room background" />
+        <picture>
+          <source srcset="assets/mission-bg.webp" type="image/webp">
+          <img class="hero-bg-anim" src="assets/mission-bg.png" alt="PhysioGlides clinic treatment and healing room background" />
+        </picture>
         <div class="hero-overlay"></div>
         <div class="container hero-content">
           <p class="eyebrow fade-in-up delay-1">Trusted by 500+ patients in Chennai</p>
@@ -151,7 +189,10 @@
         <div class="container split">
           <div class="image-stack reveal-on-scroll">
             <span></span>
-            <img src="assets/about-clinic.png" alt="PhysioGlides clinic interior and treatment space" />
+            <picture>
+              <source srcset="assets/about-clinic.webp" type="image/webp">
+              <img src="assets/about-clinic.png" alt="PhysioGlides clinic interior and treatment space" width="600" height="420" />
+            </picture>
           </div>
           <div class="section-copy reveal-on-scroll">
             <p class="section-kicker">About Us</p>
@@ -227,7 +268,7 @@
           </div>
           <div class="services-grid" data-services-grid></div>
           <div class="center-actions">
-            <a class="btn btn-outline" href="services.html">View All Services</a>
+            <a class="btn btn-outline" href="services.php">View All Services</a>
           </div>
         </div>
       </section>
@@ -333,23 +374,31 @@
           </div>
 
           <form class="appointment-form" data-appointment-form novalidate>
+            <!-- CSRF Token Input -->
+            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8'); ?>">
+            
+            <!-- Honeypot anti-spam (hidden from users) -->
+            <div style="display:none; position:absolute; left:-9999px;">
+              <input type="text" name="website_url" tabindex="-1" autocomplete="off">
+            </div>
+
             <div class="form-row">
-              <label>
+              <label for="form-name">
                 <span>Full Name *</span>
-                <input type="text" name="name" placeholder="John Doe" required />
+                <input type="text" id="form-name" name="name" placeholder="John Doe" required />
               </label>
-              <label>
+              <label for="form-phone">
                 <span>Phone Number *</span>
-                <input type="tel" name="phone" placeholder="+91 98765 43210" required pattern="[-0-9+() ]{10,15}" />
+                <input type="tel" id="form-phone" name="phone" placeholder="+91 98765 43210" required />
               </label>
             </div>
-            <label>
+            <label for="form-email">
               <span>Email Address *</span>
-              <input type="email" name="email" placeholder="john@example.com" required />
+              <input type="email" id="form-email" name="email" placeholder="john@example.com" required />
             </label>
-            <label>
+            <label for="form-service">
               <span>Service Required *</span>
-              <select name="service" required>
+              <select id="form-service" name="service" required>
                 <option value="">Select a service...</option>
                 <option>Low-Level Laser Therapy (LLLT)</option>
                 <option>Short Wave Diathermy (SWD)</option>
@@ -368,24 +417,33 @@
               </select>
             </label>
             <div class="form-row">
-              <label>
+              <label for="form-date">
                 <span>Preferred Date *</span>
-                <input type="date" name="date" required />
+                <input type="date" id="form-date" name="date" required />
               </label>
-              <label>
+              <label for="form-time">
                 <span>Preferred Time *</span>
-                <input type="time" name="time" required />
+                <input type="time" id="form-time" name="time" required />
               </label>
             </div>
-            <label>
+            <label for="form-age">
               <span>Age *</span>
-              <input type="number" name="age" min="1" max="120" placeholder="e.g. 35" required />
+              <input type="number" id="form-age" name="age" min="1" max="120" placeholder="e.g. 35" required />
             </label>
-            <label>
+            <label for="form-notes">
               <span>Additional Notes</span>
-              <textarea name="notes" rows="3" placeholder="Briefly describe your condition or symptoms..."></textarea>
+              <textarea id="form-notes" name="notes" rows="3" placeholder="Briefly describe your condition or symptoms..."></textarea>
             </label>
-            <p class="form-note"><svg><use href="#icon-shield"></use></svg>Your data is secure and confidential.</p>
+            
+            <!-- Cloudflare Turnstile Verification widget -->
+            <?php if (defined('TURNSTILE_SITE_KEY') && !empty(TURNSTILE_SITE_KEY)): ?>
+              <div class="cf-turnstile" data-sitekey="<?php echo TURNSTILE_SITE_KEY; ?>" data-theme="light" style="margin: 10px 0;"></div>
+            <?php endif; ?>
+
+            <p class="form-note">
+              <svg><use href="#icon-shield"></use></svg>
+              <span>Your data is secure and confidential. We retain your IP address for 90 days for anti-spam.</span>
+            </p>
             <button class="btn btn-primary btn-submit" type="submit">Request Appointment</button>
             <p class="form-status" role="status" aria-live="polite" data-form-status></p>
           </form>
@@ -451,7 +509,7 @@
     <footer class="footer">
       <div class="container footer-grid">
         <div>
-          <a class="brand footer-brand" href="index.html#home" aria-label="PhysioGlides home">
+          <a class="brand footer-brand" href="index.php#home" aria-label="PhysioGlides home">
             <span class="brand-mark"><svg><use href="#icon-activity"></use></svg></span>
             <span class="brand-name">Physio<span>Glides</span></span>
           </a>
@@ -462,9 +520,9 @@
         </div>
         <div>
           <h3>Quick Links</h3>
-          <a href="index.html#home">Home</a>
-          <a href="about.html">About Us</a>
-          <a href="services.html">Our Services</a>
+          <a href="index.php#home">Home</a>
+          <a href="about.php">About Us</a>
+          <a href="services.php">Our Services</a>
           <a href="#booking">Book Appointment</a>
         </div>
         <div>
@@ -480,11 +538,11 @@
         </div>
       </div>
       <div class="container footer-bottom">
-        <span>Copyright <span data-year></span> PhysioGlides Physiotherapy Clinic. All rights reserved.</span>
+        <span>Copyright &copy; <span data-year></span> PhysioGlides Physiotherapy Clinic. All rights reserved.</span>
       </div>
     </footer>
 
-    <a class="whatsapp" href="#contact" aria-label="Chat on WhatsApp">
+    <a class="whatsapp" href="https://wa.me/919876543210" target="_blank" rel="noreferrer" aria-label="Chat on WhatsApp">
       <svg><use href="#icon-phone"></use></svg>
     </a>
 
@@ -495,6 +553,7 @@
       <div data-dialog-content></div>
     </dialog>
 
-    <script src="script.js"></script>
+    <!-- Cache-Busted Javascript -->
+    <script src="script.js?v=1.0.1"></script>
   </body>
 </html>
