@@ -482,14 +482,8 @@ svg:not(.svg-sprite) {
   position: relative;
 }
 
-.image-stack span {
-  position: absolute;
-  inset: 16px -12px -16px 12px;
-  background: rgba(4, 156, 164, 0.16);
-  border-radius: 8px;
-}
-
 .image-stack img {
+  margin: 0;
   position: relative;
   z-index: 1;
   width: 100%;
@@ -809,8 +803,7 @@ svg:not(.svg-sprite) {
   font-size: 0.85rem;
   font-weight: 700;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  word-break: break-word;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 
 .therapy-grid span:hover {
