@@ -1,3 +1,16 @@
+// ======================================================================
+// EMAILJS CONFIGURATION CONFIG
+// ======================================================================
+const EMAILJS_PUBLIC_KEY = "YOUR_PUBLIC_KEY"; // Replace with your EmailJS Public Key
+const EMAILJS_SERVICE_ID = "YOUR_SERVICE_ID"; // Replace with your EmailJS Service ID
+const EMAILJS_ADMIN_TEMPLATE_ID = "YOUR_ADMIN_TEMPLATE_ID"; // Replace with Admin Alert Template ID
+const EMAILJS_CLIENT_TEMPLATE_ID = "YOUR_CLIENT_TEMPLATE_ID"; // Replace with Client Confirmation Template ID
+
+// Initialize EmailJS
+if (typeof emailjs !== "undefined") {
+  emailjs.init(EMAILJS_PUBLIC_KEY);
+}
+
 const services = [
   {
     id: "low-level-laser-therapy",
@@ -289,7 +302,7 @@ function openServiceDialog(serviceId) {
   const service = services.find((item) => item.id === serviceId);
   if (!service || !dialog || !dialogContent) return;
 
-  const bookingHref = document.getElementById("booking") ? "#booking" : "index.php#booking";
+  const bookingHref = document.getElementById("booking") ? "#booking" : "index.html#booking";
 
   dialogContent.innerHTML = `
     <picture>
@@ -437,6 +450,22 @@ if (appointmentForm) {
     // Clear all existing inline errors
     formInputs.forEach((input) => clearFieldError(input));
 
+    // Validate Honeypot (hidden field)
+    const honeypot = appointmentForm.querySelector('input[name="website_url"]');
+    if (honeypot && honeypot.value.trim() !== "") {
+      formStatus.textContent = "Request flagged as automated spam.";
+      formStatus.style.color = "#dc2626";
+      return;
+    }
+
+    // Validate Cloudflare Turnstile
+    const turnstileResponse = appointmentForm.querySelector('[name="cf-turnstile-response"]');
+    if (turnstileResponse && turnstileResponse.value === "") {
+      formStatus.textContent = "Security verification required. Please check Turnstile.";
+      formStatus.style.color = "#dc2626";
+      return;
+    }
+
     let firstInvalidField = null;
 
     // Validate Full Name (Human-Realistic supporting accents, hyphens, dots, spaces)
@@ -516,6 +545,13 @@ if (appointmentForm) {
       return;
     }
 
+    // Check if configuration is updated
+    if (EMAILJS_PUBLIC_KEY === "YOUR_PUBLIC_KEY" || EMAILJS_SERVICE_ID === "YOUR_SERVICE_ID") {
+      formStatus.innerHTML = "System is in template setup mode. Please configure your EmailJS credentials.";
+      formStatus.style.color = "#dc2626";
+      return;
+    }
+
     // Show loading visual feedback and disable duplicate submissions
     formStatus.textContent = "Submitting booking request...";
     formStatus.style.color = "var(--teal-dark)";
@@ -525,10 +561,6 @@ if (appointmentForm) {
     submitBtn.disabled = true;
     submitBtn.textContent = "Submitting...";
 
-    // Extract CSRF Token from meta tag
-    const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
-    const csrfToken = csrfTokenMeta ? csrfTokenMeta.getAttribute("content") : "";
-
     // Build form payload
     const formData = new FormData(appointmentForm);
     const payload = {};
@@ -536,35 +568,38 @@ if (appointmentForm) {
       payload[key] = value.trim();
     });
 
-    fetch("booking.php", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-Token": csrfToken
-      },
-      body: JSON.stringify(payload)
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("HTTP connection error " + res.status);
-        }
-        return res.json();
-      })
-      .then((data) => {
-        if (data.success) {
-          appointmentForm.reset();
-          // Reload Turnstile widget state if configured and present
-          if (window.turnstile) {
-            window.turnstile.reset();
+    const templateParams = {
+      name: payload.name,
+      phone: payload.phone,
+      email: payload.email,
+      service: payload.service,
+      date: payload.date,
+      time: payload.time,
+      age: payload.age,
+      notes: payload.notes || "No notes provided.",
+      clinic_phone: "+91 98765 43210",
+      clinic_email: "hello@physioglides.com"
+    };
+
+    // Parallel dispatch to EmailJS for Admin notification and Patient confirmation
+    const adminPromise = emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_ADMIN_TEMPLATE_ID, templateParams);
+    const clientPromise = emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_CLIENT_TEMPLATE_ID, templateParams);
+
+    Promise.all([adminPromise, clientPromise])
+      .then(() => {
+        appointmentForm.reset();
+        // Reload Turnstile widget state if configured and present
+        if (window.turnstile) {
+          const turnstileElem = document.querySelector(".cf-turnstile");
+          if (turnstileElem) {
+            window.turnstile.reset(turnstileElem);
           }
-          formStatus.textContent = data.message;
-          formStatus.style.color = "var(--teal-dark)";
-        } else {
-          formStatus.innerHTML = data.message;
-          formStatus.style.color = "#dc2626";
         }
+        formStatus.textContent = "Appointment request received successfully. Our coordinator will contact you shortly.";
+        formStatus.style.color = "var(--teal-dark)";
       })
       .catch((error) => {
+        console.error("EmailJS Error: ", error);
         // Safe fallback alert with active call and WhatsApp action triggers
         formStatus.innerHTML = `
           Unable to submit booking automatically. Please call us at 
