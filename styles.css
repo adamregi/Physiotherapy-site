@@ -19,6 +19,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -29,6 +30,7 @@ body {
   line-height: 1.6;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 body.menu-open {
@@ -774,7 +776,7 @@ svg:not(.svg-sprite) {
 .therapy-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 14px;
+  gap: 10px;
 }
 
 .therapy-grid span {
@@ -782,14 +784,17 @@ svg:not(.svg-sprite) {
   align-items: center;
   justify-content: center;
   text-align: center;
-  min-height: 58px;
-  padding: 16px;
+  min-height: 50px;
+  padding: 10px 8px;
   color: #f9fafb;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
+  font-size: 0.85rem;
   font-weight: 700;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .therapy-grid span:hover {
@@ -1357,7 +1362,14 @@ svg:not(.svg-sprite) {
   }
 
   .therapy-grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+
+  .therapy-grid span {
+    padding: 14px 12px;
+    font-size: 0.95rem;
+    min-height: 54px;
   }
 }
 
@@ -1376,6 +1388,16 @@ svg:not(.svg-sprite) {
   
   .brand-name {
     font-size: 1.45rem;
+  }
+
+  .therapy-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .therapy-grid span {
+    padding: 16px;
+    font-size: 1rem;
+    min-height: 58px;
   }
   
   .desktop-nav {

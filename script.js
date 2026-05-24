@@ -270,10 +270,7 @@ function renderServices() {
     .map(
       (service) => `
         <article class="service-card reveal-on-scroll">
-          <picture>
-            <source srcset="${service.image.replace('.png', '.webp')}" type="image/webp">
-            <img src="${service.image}" alt="${service.title}" loading="lazy" width="370" height="245" />
-          </picture>
+          <img src="${service.image}" alt="${service.title}" loading="lazy" width="370" height="245" />
           <div class="service-card-content">
             <h3>${service.title}</h3>
             <p>${service.shortDesc}</p>
@@ -305,10 +302,7 @@ function openServiceDialog(serviceId) {
   const bookingHref = document.getElementById("booking") ? "#booking" : "index.html#booking";
 
   dialogContent.innerHTML = `
-    <picture>
-      <source srcset="${service.image.replace('.png', '.webp')}" type="image/webp">
-      <img class="dialog-media" src="${service.image}" alt="${service.title}" width="760" height="260" />
-    </picture>
+    <img class="dialog-media" src="${service.image}" alt="${service.title}" width="760" height="260" />
     <div class="dialog-body">
       <h2>${service.title}</h2>
       <p>${service.fullDesc}</p>
